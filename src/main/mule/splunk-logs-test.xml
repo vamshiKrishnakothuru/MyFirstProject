@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="1518158b-1325-4dda-a31c-65c16ce8243c" >
+		<http:listener-connection host="0.0.0.0" port="8083" />
+	</http:listener-config>
+	<json-logger:config name="JSON_Logger_Config" doc:name="JSON Logger Config" doc:id="beedc74c-5b5c-4fe8-9081-f4346026c45d" applicationName="splunk-app" applicationVersion="1.0" environment="dev" />
+	<flow name="splunk-logs-testFlow" doc:id="f3afeffa-8d60-434c-b688-d84944bf9bd4" >
+		<http:listener doc:name="Listener" doc:id="b4fd3672-ebb3-4d03-9aed-d018962d7e79" config-ref="HTTP_Listener_config" path="/splunk-test"/>
+		<json-logger:logger doc:name="Logger" doc:id="1d2bc246-1919-4a25-b59e-b9c78f8f735b" config-ref="JSON_Logger_Config" message="starting flow"/>
+		<ee:transform doc:name="Transform Message" doc:id="1a7a5a15-ef68-4a08-844e-17d4f2de451b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<json-logger:logger doc:name="Logger" doc:id="063799c0-9789-4719-adcd-dbeb6b755521" config-ref="JSON_Logger_Config" message="Ending flow"/>
+	</flow>
+</mule>
